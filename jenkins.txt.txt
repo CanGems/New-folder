@@ -1,0 +1,54 @@
+how to install jenkins on ec2 instance --->
+
+## first command 1.
+
+ curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key | sudo tee \
+    /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+
+
+## Then add a Jenkins apt repository entry: second command:-
+
+echo deb [signed-by=/usr/share/keyrings/jenkins-keyring.asc] \
+    https://pkg.jenkins.io/debian-stable binary/ | sudo tee \
+    /etc/apt/sources.list.d/jenkins.list > /dev/null
+
+  
+  sudo apt-get update
+  sudo apt-get install fontconfig openjdk-11-jre
+  sudo apt-get install jenkins
+
+
+###Docker file using alpine sockect
+
+
+# Dockerfile
+FROM node:lts-alpine
+
+# create destination directory
+RUN mkdir -p /usr/src/nuxt-app
+WORKDIR /usr/src/nuxt-app
+
+# update and install dependency
+RUN apk update && apk upgrade
+RUN apk add git
+
+# copy the app, note .dockerignore
+COPY . /usr/src/nuxt-app/
+RUN yarn install
+RUN yarn build
+
+EXPOSE 3000
+
+ENV NUXT_HOST=0.0.0.0
+ENV NUXT_PORT=3000
+
+CMD [ "yarn", "start" ]
+
+
+
+$ docker pull alpine/socat
+$ docker run -d --restart=always \
+    -p 127.0.0.1:2376:2375 \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    alpine/socat \
+    tcp-listen:2375,fork,reuseaddr unix-connect:/var/run/docker.sock
